@@ -72,7 +72,7 @@ namespace The_Please_Dont_Fail_Me_Simulator.Maps
 
             this.Campus = (MapSlot[,])this.CampusMap.Clone();
             this.Campus[9, 2] = this.PlayerLocation;
-            this.Campus[2, 2] = new EnemyLocation(new Enemy("Ex-Lover", 10));
+            this.Campus[2, 2] = new EnemyLocation(new Enemy("Ex-Lover", 1));
             this.Campus[7, 8] = new ItemLocation(new Coffee());
             this.Campus[4, 12] = new ItemLocation(new Monster());
             this.Campus[11, 19] = new ItemLocation(new BrokenBottle());

@@ -56,6 +56,10 @@ namespace The_Please_Dont_Fail_Me_Simulator.Players
                 SetLevel(this.Level + 1);
                 enemyExperience -= this.ExperienceNeeded;
             }
+            if (enemyExperience < 0)
+            {
+                enemyExperience = 0;
+            }
             this.Experience = enemyExperience;
         }
     }

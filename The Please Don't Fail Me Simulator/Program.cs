@@ -63,9 +63,7 @@ namespace The_Please_Dont_Fail_Me_Simulator
             while (player.Health > 0 & enemy.Health > 0)
             {
                 Console.Clear();
-                Console.Write(new BattleMenu());
-                Console.WriteLine("\nPlayer Health: " + player.Health);
-                Console.WriteLine("Enemy Health: " + enemy.Health);
+                Console.Write(new BattleMenu(player, enemy));
                 Console.WriteLine("\nPick your move!");
                 Console.WriteLine("1: Attack\t3: Dodge");
                 Console.WriteLine("2: Block \t4: Retreat");
@@ -92,7 +90,7 @@ namespace The_Please_Dont_Fail_Me_Simulator
                 }
 
                 Console.Clear();
-                Console.Write(new BattleMenu());
+                Console.Write(new BattleMenu(player, enemy));
                 if (enemyChoice >= 2)
                 {
                     Choice(enemy, player, enemyChoice);
@@ -138,9 +136,6 @@ namespace The_Please_Dont_Fail_Me_Simulator
             switch (choice)
             {
                 //Attacking
-                case 0:
-                    attacker.Mode = Entity.Stance.Attack;
-                    break;
                 case 1:
                     attacker.Mode = Entity.Stance.Attack;
                     int attackerCrit = attacker.Crit;
@@ -198,7 +193,7 @@ namespace The_Please_Dont_Fail_Me_Simulator
                 switch (key)
                 {
                     case ConsoleKey.Escape:
-                        break;
+                        return;
                     case ConsoleKey.W:
                         selection--;
                         break;

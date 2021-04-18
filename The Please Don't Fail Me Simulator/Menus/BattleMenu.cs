@@ -2,71 +2,40 @@
 using System.Collections.Generic;
 using System.Text;
 using The_Please_Dont_Fail_Me_Simulator.Maps;
+using The_Please_Dont_Fail_Me_Simulator.Players;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Menus
 {
     public class BattleMenu : TextMenu
     {
-        public BattleMenu()
-        {
+        private Player Player;
+        private Enemy Enemy;
 
+        public BattleMenu(Player player, Enemy enemy)
+        {
+            this.Player = player;
+            this.Enemy = enemy;
         }
 
         public override string ToString()
         {
-            string menu = "";
+            string menu = "╔═══════════════════════╗";
+            menu += "\n║        Battle         ║";
+            menu += "\n║                       ║";
+            menu += "\n║ " + AlignCenter("Enemy HP: " + Enemy.Health, 2) + " ║";
+            menu += "\n║ " + AlignCenter("Enemy ATT: " + Enemy.Attack, 2) + " ║";
+            menu += "\n║ " + AlignCenter("Enemy DEF: " + Enemy.Defense, 2) + " ║";
+            menu += "\n║" + AlignCenter("", 0) + "║";
+            menu += "\n║ " + AlignCenter("Player HP: " + Player.Health, 2) + " ║";
+            menu += "\n║ " + AlignCenter("Player ATT: " + Player.Attack, 2) + " ║";
+            menu += "\n║ " + AlignCenter("Player DEF: " + Player.Defense, 2) + " ║";
 
-            //Top border.
-            for (int horizontal = 0; horizontal < 22; horizontal++)
+            for (int y = 0; y < 2; y++)
             {
-                if (horizontal == 0)
-                {
-                    menu += "╔";
-                }
-                else if (horizontal == 22 - 1)
-                {
-                    menu += "╗";
-                }
-                else
-                {
-                    menu += "═";
-                }
-
+                menu += "\n║" + AlignCenter("", 0) + "║";
             }
 
-            //Middle borders.
-            for (int vertical = 0; vertical < 10; vertical++)
-            {
-                menu += "\n";
-                for (int horizontal = 0; horizontal < 22; horizontal++)
-                {
-                    if (horizontal == 0 || horizontal == 22 - 1)
-                    {
-                        menu += "║";
-                    }
-                    else
-                    {
-                        menu += " ";
-                    }
-                }
-            }
-
-            //Bottom border.
-            for (int horizontal = 0; horizontal < 22; horizontal++)
-            {
-                if (horizontal == 0)
-                {
-                    menu += "\n╚";
-                }
-                else if (horizontal == 22 - 1)
-                {
-                    menu += "╝";
-                }
-                else
-                {
-                    menu += "═";
-                }
-            }
+            menu += "\n╚═══════════════════════╝";
 
             return menu;
         }
