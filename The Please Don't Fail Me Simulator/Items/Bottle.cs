@@ -4,9 +4,10 @@ using System.Text;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Items
 {
-    public class BrokenBottle : Weapon
+    [Serializable()]
+    public class Bottle : Weapon
     {
-        public BrokenBottle() : base("Broken Bottle", 9999, 1)
+        public Bottle() : base("Bottle", 5, 1)
         {
 
         }

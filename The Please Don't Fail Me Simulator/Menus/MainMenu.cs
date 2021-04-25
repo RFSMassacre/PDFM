@@ -7,73 +7,42 @@ namespace The_Please_Dont_Fail_Me_Simulator.Menus
 {
     public class MainMenu : TextMenu
     {
-        public MainMenu()
-        {
+        private int Selection;
 
+        public MainMenu(int selection)
+        {
+            this.Selection = selection;
         }
 
         public override string ToString()
         {
-            string menu = "";
+            string[] selections = new string[2] { "New Game", "Load Game" };
+            string menu = "╔═══════════════════════╗";
+            menu += "\n║ The Please Don't Fail ║";
+            menu += "\n║     Me Simulator      ║";
+            menu += "\n║                       ║";
+            menu += "\n║                       ║";
 
-            //Top border.
-            for (int horizontal = 0; horizontal < 22; horizontal++)
+            for (int y = 0; y < 8; y++)
             {
-                if (horizontal == 0)
+                try
                 {
-                    menu += "╔";
-                }
-                else if (horizontal == 22 - 1)
-                {
-                    menu += "╗";
-                }
-                else
-                { 
-                    menu += "═"; 
-                }
-                
-            }
-
-            //Middle borders.
-            for (int vertical = 0; vertical < 12; vertical++)
-            {
-                menu += "\n";
-                for (int horizontal = 0; horizontal < 22; horizontal++)
-                {
-                    if (vertical == 1)
+                    if (this.Selection == y)
                     {
-                        menu += "║Please Don't Fail Me║";
-                        break;
-                    }
-                    else if (horizontal == 0 || horizontal == 22 - 1)
-                    {
-                        menu += "║";
+                        menu += "\n║ >" + AlignCenter(selections[y], 2) + "║";
                     }
                     else
                     {
-                        menu += " ";
+                        menu += "\n║" + AlignCenter(selections[y], 0) + "║";
                     }
                 }
-            }
-
-            //Bottom border.
-            for (int horizontal = 0; horizontal < 22; horizontal++)
-            {
-                if (horizontal == 0)
+                catch (IndexOutOfRangeException)
                 {
-                    menu += "\n╚";
-                }
-                else if (horizontal == 22 - 1)
-                {
-                    menu += "╝";
-                }
-                else
-                {
-                    menu += "═";
+                    menu += "\n║" + AlignCenter("", 0) + "║";
                 }
             }
 
-            return menu;
+            return menu += "\n╚═══════════════════════╝";
         }
     }
 }

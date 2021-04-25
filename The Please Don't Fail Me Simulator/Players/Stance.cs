@@ -4,11 +4,10 @@ using System.Text;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Players
 {
-    public class Boss : Enemy
+    public enum Stance
     {
-        public Boss() : base("Evil Professor John", 10)
-        {
-
-        }
+        Attack,
+        Block,
+        Dodge
     }
 }

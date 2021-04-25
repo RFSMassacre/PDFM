@@ -5,13 +5,18 @@ using The_Please_Dont_Fail_Me_Simulator.Items;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Maps
 {
+    [Serializable()]
     class ItemLocation : MapSlot
     {
-        public readonly Item Item;
+        public readonly string ItemName;
 
-        public ItemLocation(Item item)
+        public ItemLocation(string item) : base()
         {
-            this.Item = item;
+            this.ItemName = item;
+        }
+        public ItemLocation(string item, int floor, int x, int y) : base(floor, x, y)
+        {
+            this.ItemName = item;
         }
 
         public override string Name
@@ -26,7 +31,7 @@ namespace The_Please_Dont_Fail_Me_Simulator.Maps
         {
             get { return true; }
         }
-        public override SlotType SlotType
+        public override SlotType Type
         {
             get { return SlotType.Item; }
         }

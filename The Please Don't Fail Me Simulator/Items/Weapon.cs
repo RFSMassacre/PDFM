@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 using The_Please_Dont_Fail_Me_Simulator.Menus;
 using The_Please_Dont_Fail_Me_Simulator.Players;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Items
 {
+    [Serializable()]
     public abstract class Weapon : Item
     {
         public int AttackBoost { get; private set; }
@@ -16,6 +18,16 @@ namespace The_Please_Dont_Fail_Me_Simulator.Items
             this.AttackBoost = attackBoost;
             this.DefenseBoost = defenseBoost;
         }
+        public Weapon(SerializationInfo info, StreamingContext context)
+        {
+            this.AttackBoost = (int)info.GetValue("Attack-Boost", typeof(int));
+            this.DefenseBoost = (int)info.GetValue("Defense-Boost", typeof(int));
+        }
+        public new void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Attack-Boost", this.AttackBoost);
+            info.AddValue("Defense-Boost", this.DefenseBoost);
+        }
 
         public override string ToString()
         {
@@ -24,7 +36,7 @@ namespace The_Please_Dont_Fail_Me_Simulator.Items
 
         public override void Use(Player player)
         {
-            player.Weapon = this;
+            player.WeaponName = this.Name;
             Console.WriteLine("\nYou gained " + this.AttackBoost + " ATK!");
             Console.WriteLine("You gained " + this.DefenseBoost + " DEF!");
             Console.WriteLine("\nNew Attack: " + player.Attack + " ATK!");

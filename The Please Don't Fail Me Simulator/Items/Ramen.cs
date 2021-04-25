@@ -4,10 +4,9 @@ using System.Text;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Items
 {
-    [Serializable()]
-    public class YardStick : Weapon
+    public class Ramen : Consumable
     {
-        public YardStick() : base("Yard Stick", 3, 3)
+        public Ramen() : base("Ramen", 85)
         {
 
         }

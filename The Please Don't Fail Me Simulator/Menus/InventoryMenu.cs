@@ -27,7 +27,7 @@ namespace The_Please_Dont_Fail_Me_Simulator.Menus
             {
                 try
                 {
-                    Item item = Player.Items[y];
+                    Item item = Item.GenerateItem(Player.ItemNames[y]);
                     if (this.Selection == y)
                     {
                         menu += "\n║ >" + AlignCenter(item.Name, 2) + "║";

@@ -13,6 +13,11 @@ namespace The_Please_Dont_Fail_Me_Simulator.Menus
 
         protected static string AlignCenter(string text, int displace)
         {
+            if (text == null)
+            {
+                return "";
+            }
+
             int width = Width - displace;
             text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
 

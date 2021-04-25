@@ -5,18 +5,23 @@ using The_Please_Dont_Fail_Me_Simulator.Players;
 
 namespace The_Please_Dont_Fail_Me_Simulator.Maps
 {
+    [Serializable()]
     public class PlayerLocation : MapSlot
     {
         public readonly Player Player;
 
-        public PlayerLocation(Player player)
+        public PlayerLocation(Player player) : base()
+        {
+            this.Player = player;
+        }
+        public PlayerLocation(Player player, int floor, int x, int y) : base(floor, x, y)
         {
             this.Player = player;
         }
 
         public override string Name
         {
-            get { return "Hero"; }
+            get { return "Player"; }
         }
         public override char Mark
         {
@@ -26,7 +31,7 @@ namespace The_Please_Dont_Fail_Me_Simulator.Maps
         {
             get { return true; }
         }
-        public override SlotType SlotType
+        public override SlotType Type
         {
             get { return SlotType.PlayerLocation; }
         }

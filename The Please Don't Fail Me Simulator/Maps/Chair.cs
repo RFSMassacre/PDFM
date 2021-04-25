@@ -5,32 +5,32 @@ using System.Text;
 namespace The_Please_Dont_Fail_Me_Simulator.Maps
 {
     [Serializable()]
-    public class Pavement : MapSlot
+    public class Chair : MapSlot
     {
-        public Pavement() : base()
+        public Chair() : base()
         {
 
         }
-        public Pavement(int floor, int x, int y) : base(floor, x, y)
+        public Chair(int floor, int x, int y) : base(floor, x, y)
         {
 
         }
 
         public override string Name
         {
-            get { return "Pavement"; }
+            get { return "Chair"; }
         }
         public override char Mark
         {
-            get { return '░'; }
+            get { return '└'; }
         }
         public override bool CanWalk
         {
-            get { return true; }
+            get { return false; }
         }
         public override SlotType Type
         {
-            get { return SlotType.Pavement; }
+            get { return SlotType.Chair; }
         }
     }
 }

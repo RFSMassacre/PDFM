@@ -5,70 +5,82 @@ using The_Please_Dont_Fail_Me_Simulator.Items;
 using The_Please_Dont_Fail_Me_Simulator.Maps;
 using The_Please_Dont_Fail_Me_Simulator.Menus;
 using System.IO;
+using The_Please_Dont_Fail_Me_Simulator.Data;
 
 namespace The_Please_Dont_Fail_Me_Simulator
 {
     public class Program
     {
         public static bool Completed = false;
-        public static readonly Map Campus = new Map();
-        public static readonly Player Player = new Player("Student", 1);
+        public static Map Campus = new Map();
+        public static Player Player = new Player("Student", 1);
 
         public static void Main(string[] args)
         {
             bool firstRun = true;
-
-            Console.Write(new MainMenu());
-            Console.WriteLine("\nPress SPACEBAR to start!");
+            Console.TreatControlCAsInput = true;
+            OpenGame();
 
             while (true)
             {
-                Console.TreatControlCAsInput = true;
-                ConsoleKey key = Console.ReadKey(true).Key;
                 if (firstRun)
                 {
                     firstRun = false;
                     Console.Clear();
-                    Console.Write(Campus);
+                    Console.Write(Campus.GetMap());
                 }
                 else
                 {
+                    ConsoleKey key = Console.ReadKey(true).Key;
                     switch (key)
                     {
                         case ConsoleKey.W:
-                            Campus.MoveHero(Map.Direction.Up);
+                            Campus.Move(Map.Direction.Up);
                             break;
                         case ConsoleKey.S:
-                            Campus.MoveHero(Map.Direction.Down);
+                            Campus.Move(Map.Direction.Down);
                             break;
                         case ConsoleKey.A:
-                            Campus.MoveHero(Map.Direction.Left);
+                            Campus.Move(Map.Direction.Left);
                             break;
                         case ConsoleKey.D:
-                            Campus.MoveHero(Map.Direction.Right);
+                            Campus.Move(Map.Direction.Right);
                             break;
                         case ConsoleKey.I:
                             OpenInventory();
                             break;
+                        case ConsoleKey.P:
+                            Console.Clear();
+                            Console.Write(new StatsMenu(Player));
+                            Console.ReadKey(true);
+                            break;
+                        case ConsoleKey.Escape:
+                            string playerPath = Environment.CurrentDirectory + @"\Player.save";
+                            string mapPath = Environment.CurrentDirectory + @"\Map.save";
+                            BinaryData.Write<Player>(playerPath, Player);
+                            BinaryData.Write<Map>(mapPath, Campus);
+                            Console.WriteLine("\nGame has been saved!");
+                            Console.ReadKey(true);
+                            break;
                     }
 
                     Console.Clear();
-                    Console.Write(Campus);
+                    Console.Write(Campus.GetMap());
                 }
             }
         }
 
         public static bool StartBattle(Player player, Enemy enemy)
         {
+            Console.Clear();
+            Console.Write(new BattleMenu(player, enemy));
+            Console.WriteLine("\nPick your move!");
+            Console.WriteLine("1: Attack\t3: Dodge");
+            Console.WriteLine("2: Block \t4: Retreat");
             while (player.Health > 0 & enemy.Health > 0)
             {
-                Console.Clear();
-                Console.Write(new BattleMenu(player, enemy));
-                Console.WriteLine("\nPick your move!");
-                Console.WriteLine("1: Attack\t3: Dodge");
-                Console.WriteLine("2: Block \t4: Retreat");
                 ConsoleKey key = Console.ReadKey(true).Key;
-                int playerChoice = 0;
+                int playerChoice = 2;
                 int enemyChoice = enemy.Choice;
                 switch (key)
                 {
@@ -87,6 +99,8 @@ namespace The_Please_Dont_Fail_Me_Simulator
                     case ConsoleKey.I:
                         OpenInventory();
                         break;
+                    default:
+                        continue;
                 }
 
                 Console.Clear();
@@ -105,8 +119,8 @@ namespace The_Please_Dont_Fail_Me_Simulator
                     }
                     
                 }
-                player.Mode = Entity.Stance.Attack;
-                enemy.Mode = Entity.Stance.Attack;
+                player.Mode = Stance.Attack;
+                enemy.Mode = Stance.Attack;
 
                 if (player.Health <= 0)
                 {
@@ -126,18 +140,24 @@ namespace The_Please_Dont_Fail_Me_Simulator
                     Thread.Sleep(3000);
                     return true;
                 }
+
+                Console.Clear();
+                Console.Write(new BattleMenu(player, enemy));
+                Console.WriteLine("\nPick your move!");
+                Console.WriteLine("1: Attack\t3: Dodge");
+                Console.WriteLine("2: Block \t4: Retreat");
             }
 
             return false;
         }
 
-        private static void Choice(Entity attacker, Entity defender, int choice)
+        private static void Choice(Player attacker, Enemy defender, int choice)
         {
             switch (choice)
             {
                 //Attacking
                 case 1:
-                    attacker.Mode = Entity.Stance.Attack;
+                    attacker.Mode = Stance.Attack;
                     int attackerCrit = attacker.Crit;
                     int attackerDamage = defender.Damage(attacker.Attack * attackerCrit);
                     if (attackerDamage > 0)
@@ -153,10 +173,10 @@ namespace The_Please_Dont_Fail_Me_Simulator
                     {
                         switch (defender.Mode)
                         {
-                            case Entity.Stance.Block:
+                            case Stance.Block:
                                 Console.WriteLine("\n" + defender.Name + " blocked all damage.");
                                 break;
-                            case Entity.Stance.Dodge:
+                            case Stance.Dodge:
                                 Console.WriteLine("\n" + defender.Name + " dodged successfully!");
                                 break;
                         }
@@ -166,13 +186,60 @@ namespace The_Please_Dont_Fail_Me_Simulator
                     break;
                 //Blocking
                 case 2:
-                    attacker.Mode = Entity.Stance.Block;
+                    attacker.Mode = Stance.Block;
                     Console.WriteLine("\n" + attacker.Name + " blocks...");
                     Thread.Sleep(1500);
                     break;
                 //Dodging
                 case 3:
-                    attacker.Mode = Entity.Stance.Dodge;
+                    attacker.Mode = Stance.Dodge;
+                    Console.WriteLine("\n" + attacker.Name + " dodges...");
+                    Thread.Sleep(1500);
+                    break;
+            }
+        }
+        private static void Choice(Enemy attacker, Player defender, int choice)
+        {
+            switch (choice)
+            {
+                //Attacking
+                case 1:
+                    attacker.Mode = Stance.Attack;
+                    int attackerCrit = attacker.Crit;
+                    int attackerDamage = defender.Damage(attacker.Attack * attackerCrit);
+                    if (attackerDamage > 0)
+                    {
+                        Console.WriteLine("\n" + attacker.Name + " has dealt " + attackerDamage + " DMG.");
+                        if (attackerCrit == 2)
+                        {
+                            Console.WriteLine(attacker.Name + " landed a critical strike!");
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    else
+                    {
+                        switch (defender.Mode)
+                        {
+                            case Stance.Block:
+                                Console.WriteLine("\n" + defender.Name + " blocked all damage.");
+                                break;
+                            case Stance.Dodge:
+                                Console.WriteLine("\n" + defender.Name + " dodged successfully!");
+                                break;
+                        }
+                        Thread.Sleep(1000);
+                    }
+                    Thread.Sleep(3000);
+                    break;
+                //Blocking
+                case 2:
+                    attacker.Mode = Stance.Block;
+                    Console.WriteLine("\n" + attacker.Name + " blocks...");
+                    Thread.Sleep(1500);
+                    break;
+                //Dodging
+                case 3:
+                    attacker.Mode = Stance.Dodge;
                     Console.WriteLine("\n" + attacker.Name + " dodges...");
                     Thread.Sleep(1500);
                     break;
@@ -207,15 +274,15 @@ namespace The_Please_Dont_Fail_Me_Simulator
                 {
                     selection = 0;
                 }
-                else if (selection > Player.Items.Count - 1)
+                else if (selection > Player.ItemNames.Count - 1)
                 {
-                    selection = Player.Items.Count - 1;
+                    selection = Player.ItemNames.Count - 1;
                 }
 
                 if (key == ConsoleKey.Enter)
                 {
                     //Use item.
-                    Item item = Player.Items[selection];
+                    Item item = Item.GenerateItem(Player.ItemNames[selection]);
                     Console.Write(item);
                     while (true)
                     {
@@ -230,6 +297,65 @@ namespace The_Please_Dont_Fail_Me_Simulator
                         else if (use == ConsoleKey.N)
                         {
                             break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void OpenGame()
+        {
+            int selection = 0;
+            while (true)
+            {
+                Console.Clear();
+                Console.Write(new MainMenu(selection) + "\n");
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.W:
+                        selection--;
+                        break;
+                    case ConsoleKey.S:
+                        selection++;
+                        break;
+                }
+
+                //Keep selection in range.
+                if (selection < 0)
+                {
+                    selection = 0;
+                }
+                else if (selection > 1)
+                {
+                    selection = 1;
+                }
+
+                if (key == ConsoleKey.Enter)
+                {
+                    string playerPath = Environment.CurrentDirectory + @"\Player.save";
+                    string mapPath = Environment.CurrentDirectory + @"\Map.save";
+                    if (selection == 0)
+                    {
+                        //New Game (Write new save files)
+                        BinaryData.Write<Player>(playerPath, Player);
+                        BinaryData.Write<Map>(mapPath, Campus);
+                        break;
+                    }
+                    else if (selection == 1)
+                    {
+                        try
+                        {
+                            //Load game (Load save files given)
+                            Player = BinaryData.Read<Player>(playerPath);
+                            Campus = BinaryData.Read<Map>(mapPath);
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("No save data found!\n");
+                            Console.ReadKey(false);
                         }
                     }
                 }
