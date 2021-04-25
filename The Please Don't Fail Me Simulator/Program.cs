@@ -62,6 +62,8 @@ namespace The_Please_Dont_Fail_Me_Simulator
                             Console.WriteLine("\nGame has been saved!");
                             Console.ReadKey(true);
                             break;
+                        default:
+                            continue;
                     }
 
                     Console.Clear();
